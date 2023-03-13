@@ -1,5 +1,7 @@
 {
+    "name": "vercel-nodejs",
     "version" : 2,
+    "public": true,
     "builds" : [
         {
             "src": "./src/index.js",
@@ -9,7 +11,7 @@
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "/index.js"
+            "dest": "./src/index.js"
         }
     ]
 }
