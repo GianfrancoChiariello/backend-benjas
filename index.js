@@ -7,7 +7,7 @@ const path = require('path')
 
 const app = express()
 const port = process.env.PORT || 9000
-const api_key = process.env.MONGODB_KEY
+const api_key = process.env.MONGODB_KEY || "mongodb+srv://GChiariello:lo0FL7o4eCJ5Or4l@mybase.njpijon.mongodb.net/?retryWrites=true&w=majority"
 
 
 
@@ -24,7 +24,10 @@ const swaggerSpec = {
         },
         servers: [
             {
-                url: ['http://localhost:9000', 'https://backend-pink-omega.vercel.app'],
+                url: 'http://localhost:9000',
+            },
+            {
+                url: 'https://backend-pink-omega.vercel.app'
             }
         ]
     },

@@ -95,7 +95,6 @@ router.post('/createUser', (req,res) => {
 
 //Get all users
 router.get('/getAllUsers', (req,res) => {
-    
     userSchema    
     .find()
     .then((data) => {
