@@ -27,7 +27,7 @@ const swaggerSpec = {
                 url: 'http://localhost:9000',
             },
             {
-                url: 'https://backend-pink-omega.vercel.app/api'
+                url: 'https://backend-pink-omega.vercel.app/'
             }
         ]
     },
