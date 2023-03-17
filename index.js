@@ -52,7 +52,7 @@ app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(
 
 
 //Routes
-app.get('/', (req,res) => {
+app.get('/getAllUsers', (req,res) => {
     res.send('Welcome to my API')
 })
 
