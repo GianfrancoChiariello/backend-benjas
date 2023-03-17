@@ -27,7 +27,7 @@ const swaggerSpec = {
                 url: 'http://localhost:9000',
             },
             {
-                url: 'https://backend-pink-omega.vercel.app'
+                url: 'https://backend-pink-omega.vercel.app/api'
             }
         ]
     },
@@ -52,7 +52,7 @@ app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(
 
 
 //Routes
-app.get('/getAllUsers', (req,res) => {
+app.get('/', (req,res) => {
     res.send('Welcome to my API')
 })
 
