@@ -1,13 +1,13 @@
 const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
-const userRoutes = require('./src/routes/user')
 const path = require('path')
+const fs = require('fs')
 
 
 const app = express()
 const port = process.env.PORT || 9000
-const api_key = process.env.MONGODB_KEY || "mongodb+srv://GChiariello:lo0FL7o4eCJ5Or4l@mybase.njpijon.mongodb.net/?retryWrites=true&w=majority"
+const api_key = process.env.MONGODB_KEY
 
 
 
@@ -42,7 +42,13 @@ const swaggerSpec = {
 
 //middleware
 app.use(express.json())
-app.use('/api', userRoutes)
+
+
+//Import all routes in the "routes" folder
+fs.readdirSync('./src/routes').forEach((file) => {
+    const route = require(`./src/routes/${file}`)
+    app.use('/api', route)
+})
 
 //middleware for swagger
 app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(
