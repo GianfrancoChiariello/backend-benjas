@@ -1,6 +1,7 @@
 const express = require('express')
 const ventasSchema = require('../models/ventas')
 const productsSchema = require('../models/productos')
+const dayjs = require('dayjs');
 
 
 const router = express.Router()
@@ -72,10 +73,12 @@ router.get('/getVentas', (req,res) => {
     
     let query = {}
 
+    //Para saber cuantas ventas hay por metodo de pago
     if ( req.query.metodo ) {
         query.metodo = req.query.metodo
     }
 
+    //Para saber cuantas ventas hay de perros o gatos
     if ( req.query.animal ) {
         query[`productos.animal`] = req.query.animal
     }
@@ -92,6 +95,42 @@ router.get('/getVenta/:id', (req,res) => {
     .catch((error) => res.json({message: error}))
 })
 
+//Get ventas by today, week, month, year
+
+router.get('/getVentasByDate', (req, res) => {
+    let query = {};
+  
+    if (req.query.fecha) {
+      let fechaInicio, fechaFin;
+      const hoy = dayjs();
+  
+      if (req.query.fecha === 'dia') {
+        fechaInicio = hoy.startOf('day');
+        fechaFin = hoy.endOf('day');
+      } else if (req.query.fecha === 'semana') {
+        fechaInicio = hoy.startOf('week');
+        fechaFin = hoy.endOf('week');
+      } else if (req.query.fecha === 'mes') {
+        fechaInicio = hoy.startOf('month');
+        fechaFin = hoy.endOf('month');
+      } else if (req.query.fecha === 'año') {
+        fechaInicio = hoy.startOf('year');
+        fechaFin = hoy.endOf('year');
+      }
+  
+      query.fecha = {
+        $gte: fechaInicio.toDate(),
+        $lte: fechaFin.toDate()
+      };
+    } else {
+        return res.status(400).json({ message: 'Debe proporcionar el parámetro "fecha".' });
+    }
+  
+    ventasSchema
+      .find(query)
+      .then((data) => res.json(data))
+      .catch((error) => res.status(400).json({ message: error }));
+  });
 
 
 
