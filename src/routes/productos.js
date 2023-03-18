@@ -2,7 +2,6 @@ const express = require('express')
 const productsSchema = require('../models/productos')
 
 
-
 const router = express.Router()
 
 //Crear un producto
@@ -102,8 +101,11 @@ router.get('/getLowStock', (req,res) => {
         query.peso = req.query.peso
     }
 
-    query[`producto.cantidad`] = { $lt: 5 }
-
+    if ( req.query.empaque === "Bolsa" ) {
+        query[`producto.total_kg`] = { $lt: 30 }
+    } else if ( req.query.empaque === "Sobre" || req.query.empaque === "Lata" ) {
+        query[`producto.total_unitario`] = { $lt: 25 }
+    }
 
     productsSchema.find(query).then((data) => {
         res.json(data)
@@ -111,9 +113,14 @@ router.get('/getLowStock', (req,res) => {
     .catch((error) => res.json({message: error}))
 })
 
+//Delete product
+router.delete('/deleteProduct/:id', (req,res) => {
+    const {id} = req.params
 
-
-
+    productsSchema.findByIdAndDelete(id)
+    .then(() => res.json({message : `Se elimino el producto correctamente, id : ${id}`}))
+    .catch((error) => res.json({message: error}))
+})
 
 
 module.exports = router

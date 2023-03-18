@@ -10,25 +10,22 @@ router.post('/newVenta', (req,res) => {
 
     const productos = ventasSchema(req.body)
 
-    let cantidad = 0
     let subtotal = 0
 
 
     productos?.productos.forEach(element => {
 
-        console.log(element)
 
-/*         if ( element.empaque !== "Bolsa" || element.total_unitaria > 0 ) {
+        if ( element.empaque !== "Bolsa" || element.producto.total_unitario > 0 ) {
 
-            cantidad += element.total_unitaria
             subtotal += element.subtotal
 
             //Si hay stock
             productsSchema.findById(element._id).then((data) => {
-                if (data.producto.cantidad >= element.total_unitaria) {
+                if (data.producto.total_unitario >= element.producto.total_unitario) {
                     
                 // Descuenta la cantidad 
-                productsSchema.findByIdAndUpdate(element._id, { $inc: { 'producto.cantidad' : -element.total_unitaria }})
+                productsSchema.findByIdAndUpdate(element._id, { $inc: { 'producto.total_unitario' : -element.producto.total_unitario }})
                 .then(() => console.log("Cantidad actualizada para el producto con ID " + element._id))
                 .catch((error) => console.log(error))
                 }
@@ -36,35 +33,29 @@ router.post('/newVenta', (req,res) => {
 
         } else  {
 
-                cantidad += element.total_kgs
                 subtotal += element.subtotal
 
                 //Verifica si hay stock
                 productsSchema.findById(element._id).then((data) => {
-                    if (data.producto.total_kgs >= element.total_kgs) {
+                    if (data.producto.total_kg >= element.producto.total_kg) {
                         
                     // Descuenta la cantidad 
-                    productsSchema.findByIdAndUpdate(element._id, { $inc: { 'producto.total_kgs' : -element.total_kgs }})
+                    productsSchema.findByIdAndUpdate(element._id, { $inc: { 'producto.total_kg' : -element.producto.total_kg }})
                     .then(() => console.log("Cantidad actualizada para el producto con ID " + element._id))
                     .catch((error) => console.log(error))
                     
                     }
                 })
-        } */
+        }
     });
 
-    
-   
-   
-   
-   
-   
    
     const newed = {    
         nombre : req.body.nombre,
+        email : req.body.email,
         metodo : req.body.metodo,   
         productos : req.body.productos,
-        total : subtotal * cantidad,
+        total : subtotal,
         fecha: new Date()
     }
 
@@ -75,6 +66,32 @@ router.post('/newVenta', (req,res) => {
     })
     .catch((error) => res.json({message: error}))
 })
+
+//Get ventas
+router.get('/getVentas', (req,res) => {
+    
+    let query = {}
+
+    if ( req.query.metodo ) {
+        query.metodo = req.query.metodo
+    }
+
+    if ( req.query.animal ) {
+        query[`productos.animal`] = req.query.animal
+    }
+    
+    ventasSchema.find(query)
+    .then((data) => res.json(data))
+    .catch((error) => res.json({message: error}))
+})
+
+//Get venta by ID
+router.get('/getVenta/:id', (req,res) => {
+    ventasSchema.findById(req.params.id)
+    .then((data) => res.json(data))
+    .catch((error) => res.json({message: error}))
+})
+
 
 
 

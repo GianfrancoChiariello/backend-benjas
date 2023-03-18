@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 
 const productos = mongoose.Schema({
-
-    _id: { type: String, required: true},
     
     producto: {
 
@@ -83,11 +81,17 @@ const productos = mongoose.Schema({
     },
 
     subtotal: { type: Number, required: true},
+
+    _id: {type: String, required: true}
 })
 
 const ventaSchema = mongoose.Schema(
     {
         nombre: {
+            type: String,
+            required: true,
+        },
+        email: {
             type: String,
             required: true,
         },
