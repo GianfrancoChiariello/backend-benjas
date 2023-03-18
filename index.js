@@ -35,6 +35,9 @@ app.get('/', (req,res) => {
 mongoose.connect(api_key)
     .then(() => {
         console.log("Conectado a la base de datos")
+        app.get('/api', (req,res) => {
+            res.send('Conectado a base')
+        })
     })
     .catch((error) => {
         console.log(error)
