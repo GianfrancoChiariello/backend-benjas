@@ -96,7 +96,6 @@ router.get('/getVenta/:id', (req,res) => {
 })
 
 //Get ventas by today, week, month, year
-
 router.get('/getVentasByDate', (req, res) => {
     let query = {};
   
@@ -133,7 +132,6 @@ router.get('/getVentasByDate', (req, res) => {
 });
 
 // Get top 5 productos mas vendidos
-
 router.get('/getTop5', async (req, res) => {
   try {
     const result = await ventasSchema.aggregate([
