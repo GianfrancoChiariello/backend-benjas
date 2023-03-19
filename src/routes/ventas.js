@@ -143,17 +143,11 @@ router.get('/getTop5', async (req, res) => {
       {
         $group: {
           _id: "$productos.producto.nombre",
-          count: { $sum: "$productos.total_unitario" }
+          count: { $sum: 1 }
         }
       },
       {
         $sort: { count: -1 }
-      },
-      {
-        $project: {
-          _id: 0,
-          nombre: "$_id"
-        }
       },
       {
         $limit: 5
