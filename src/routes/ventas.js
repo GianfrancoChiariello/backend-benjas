@@ -130,7 +130,40 @@ router.get('/getVentasByDate', (req, res) => {
       .find(query)
       .then((data) => res.json(data))
       .catch((error) => res.status(400).json({ message: error }));
-  });
+});
+
+// Get top 5 productos mas vendidos
+
+router.get('/getTop5', async (req, res) => {
+  try {
+    const result = await ventasSchema.aggregate([
+      {
+        $unwind: "$productos"
+      },
+      {
+        $group: {
+          _id: "$productos.producto.nombre",
+          count: { $sum: "$productos.total_unitario" }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      },
+      {
+        $project: {
+          _id: 0,
+          nombre: "$_id"
+        }
+      },
+      {
+        $limit: 5
+      }
+    ]).exec();
+    res.json(result);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
 
 
 
