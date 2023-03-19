@@ -158,5 +158,43 @@ router.get('/getTop5', async (req, res) => {
 });
 
 
+//Delete venta 
+
+router.get('/deleteVenta/:id', async (req,res) => {
+  
+    const id = req.params.id
+
+    
+    ventasSchema.findById(id)
+    .then((data) => {
+
+      data.productos.forEach((data) => {
+        
+        if ( data.empaque != "Bolsa") {
+          // Sumo la cantidad 
+            productsSchema.findByIdAndUpdate(data._id, { $inc: { 'producto.total_unitario' : +data.producto.total_unitario }})
+            .then(() => res.json("Cantidad actualizada para el producto con ID " + data._id))
+        } else {
+            // Sumo la cantidad 
+            productsSchema.findByIdAndUpdate(data._id, { $inc: { 'producto.total_kg' : +data.producto.total_kg }})
+            .then(() => res.json("Cantidad actualizada para el producto con ID " + data._id))
+        }
+
+      })
+
+
+    })
+
+    ventasSchema.findByIdAndDelete(id)
+    .then(() => {
+      res.json({message: "Venta eliminada correctamente"})
+    })
+    .catch((e) => {
+      res.status(400).json({message: e})
+    })
+
+
+})
+
 
 module.exports = router
