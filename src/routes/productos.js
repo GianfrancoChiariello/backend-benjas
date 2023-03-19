@@ -35,35 +35,65 @@ router.put('/updateProduct/:id', (req, res) => {
 });
 
 //Get all products
-router.get('/getProducts', (req,res) => {
-    
-    const query = {}
-
+router.get('/getProducts', (req, res) => {
+    const query = {};
+  
     if (req.query.marca) {
-        query.marca = req.query.marca
-    } 
-
+      query.marca = req.query.marca;
+    }
+  
     if (req.query.animal) {
-        query.animal = req.query.animal
+      query.animal = req.query.animal;
     }
-    
+  
     if (req.query.etapa) {
-        query.etapa = req.query.etapa
+      query.etapa = req.query.etapa;
     }
-        
+  
     if (req.query.empaque) {
-        query.empaque = req.query.empaque
+      query.empaque = req.query.empaque;
     }
-            
+  
     if (req.query.peso) {
-        query.peso = req.query.peso
+      query.peso = req.query.peso;
     }
 
-    productsSchema.find(query).then((data) => {
-        res.json(data)
-    })
-    .catch((error) => res.json({message: error}))
-})
+    const hasFilters = Object.keys(query).length > 0;
+  
+    productsSchema
+      .find(hasFilters ? query : {})
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((error) => res.json({ message: error }));
+  });
+
+  
+  
+// Endpoint para obtener todos los tipos únicos de los productos
+router.get('/getAllTypes', async (req, res) => {
+    try {
+      const productos = await productsSchema.find();
+  
+      const marcas = [...new Set(productos.map((producto) => producto.marca))];
+      const animales = [...new Set(productos.map((producto) => producto.animal))];
+      const empaques = [...new Set(productos.map((producto) => producto.empaque))];
+      const pesos = [...new Set(productos.map((producto) => producto.peso))];
+      const unidades = [...new Set(productos.map((producto) => producto.unidad))];
+  
+      res.json({
+        marcas,
+        animales,
+        empaques,
+        pesos,
+        unidades,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error al obtener los tipos de productos' });
+    }
+});
+
 
 //Get product for id
 router.get('/getProduct/:id', (req,res) => {

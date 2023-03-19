@@ -42,6 +42,10 @@ const swaggerSpec = {
 
 //middleware
 app.use(express.json())
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 
 //Import all routes in the "routes" folder
