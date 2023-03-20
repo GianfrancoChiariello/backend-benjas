@@ -86,7 +86,6 @@ router.get('/getVentas', (req,res) => {
     ventasSchema.find(query)
     .then((data) => res.json(data))
     .catch((error) => res.json({message: error}))
-
 })
 
 //Get venta by ID
@@ -157,6 +156,33 @@ router.get('/getTop5', async (req, res) => {
     res.json({ message: err });
   }
 });
+
+// Get top 5 metodos mas usados
+router.get('/getTop5Payments', async (req,res) => {
+
+  try {
+    const result = await ventasSchema.aggregate([
+      {
+        $unwind: "$productos"
+      },
+      {
+        $group: {
+          _id: "$metodo",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      },
+      {
+        $limit: 5
+      }
+    ]).exec();
+    res.json(result);
+  } catch (err) {
+    res.json({ message: err });
+  }
+})
 
 //Delete venta 
 router.get('/deleteVenta/:id', async (req,res) => {
