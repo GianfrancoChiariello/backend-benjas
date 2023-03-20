@@ -56,7 +56,7 @@ const productsSchema = mongoose.Schema(
         etapa: {
             type: String,
             required: true,
-            enum: ['Cachorros','Adultos']
+            enum: ['Cachorros','Adultos','Mixed']
         },
         empaque: {
             type: String,

@@ -157,9 +157,7 @@ router.get('/getTop5', async (req, res) => {
   }
 });
 
-
 //Delete venta 
-
 router.get('/deleteVenta/:id', async (req,res) => {
   
     const id = req.params.id

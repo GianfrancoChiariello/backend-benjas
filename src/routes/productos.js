@@ -66,9 +66,8 @@ router.get('/getProducts', (req, res) => {
         res.json(data);
       })
       .catch((error) => res.json({ message: error }));
-  });
+});
 
-  
   
 // Endpoint para obtener todos los tipos únicos de los productos
 router.get('/getAllTypes', async (req, res) => {

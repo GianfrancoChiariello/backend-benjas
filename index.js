@@ -47,6 +47,14 @@ app.use((req, res, next) => {
   next();
 });
 
+//Config error al pegarle
+app.options('/api/gmailVerify', (req, res) => {
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.sendStatus(200);
+  });
+
 
 //Import all routes in the "routes" folder
 fs.readdirSync('./src/routes').forEach((file) => {
