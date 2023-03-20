@@ -2,9 +2,9 @@ const express = require('express')
 const ventasSchema = require('../models/ventas')
 const productsSchema = require('../models/productos')
 const dayjs = require('dayjs');
-
-
 const router = express.Router()
+
+
 
 //Nueva venta
 router.post('/newVenta', (req,res) => {
@@ -70,22 +70,23 @@ router.post('/newVenta', (req,res) => {
 
 //Get ventas
 router.get('/getVentas', (req,res) => {
-    
+
     let query = {}
 
     //Para saber cuantas ventas hay por metodo de pago
     if ( req.query.metodo ) {
         query.metodo = req.query.metodo
     }
-
-    //Para saber cuantas ventas hay de perros o gatos
+  
+      //Para saber cuantas ventas hay de perros o gatos
     if ( req.query.animal ) {
         query[`productos.animal`] = req.query.animal
     }
-    
+      
     ventasSchema.find(query)
     .then((data) => res.json(data))
     .catch((error) => res.json({message: error}))
+
 })
 
 //Get venta by ID

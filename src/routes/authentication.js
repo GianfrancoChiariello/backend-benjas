@@ -1,5 +1,6 @@
 const express = require('express')
 const { OAuth2Client } = require('google-auth-library');
+const jwt = require('jsonwebtoken')
 
 
 const router = express.Router()
@@ -17,19 +18,35 @@ router.post('/gmailVerify', (req,res) => {
             audience: clientId,
         })
         const payload = ticket.getPayload()
-        const userid = payload['sub']
+
+        //Crea el token con la respuesta de gmail
+        const token = jwt.sign({
+            email: payload.email,
+            name: payload.name,
+            id: payload.hub,
+            exp: Math.floor(Date.now() / 1000) + 60 + 60 + 24 * 30
+        }, 'secret')
 
         return {
             payload,
-            userid
+            token
         }
     }
 
-    verify(clientId,credential).then((data) => {
+    verify(clientId,credential)
+    .then((data) => {
         res.status(200).json(data)
+    })
+    .catch((error) => {
+        res.status(401).json(error)
     })
 
 })
+
+
+
+
+
 
 
 module.exports = router
