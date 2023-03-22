@@ -19,12 +19,13 @@ router.post('/gmailVerify', (req,res) => {
         })
         const payload = ticket.getPayload()
 
+
         //Crea el token con la respuesta de gmail
         const token = jwt.sign({
             email: payload.email,
             name: payload.name,
-            id: payload.hub,
-            exp: Math.floor(Date.now() / 1000) + 60 + 60 + 24 * 30
+            id: payload.sub,
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30
         }, 'secret')
 
         return {
@@ -42,7 +43,6 @@ router.post('/gmailVerify', (req,res) => {
     })
 
 })
-
 
 
 

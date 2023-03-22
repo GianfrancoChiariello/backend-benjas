@@ -3,11 +3,12 @@ const ventasSchema = require('../models/ventas')
 const productsSchema = require('../models/productos')
 const dayjs = require('dayjs');
 const router = express.Router()
+const {middlewareVerify} = require('../functions/verifyToken')
 
 
 
 //Nueva venta
-router.post('/newVenta', (req,res) => {
+router.post('/newVenta',middlewareVerify, (req,res) => {
 
     const productos = ventasSchema(req.body)
 
@@ -57,7 +58,8 @@ router.post('/newVenta', (req,res) => {
         metodo : req.body.metodo,   
         productos : req.body.productos,
         total : subtotal,
-        fecha: new Date()
+        fecha: new Date(),
+        idUser: res.locals.id
     }
 
     const venta = ventasSchema(newed)
@@ -69,9 +71,14 @@ router.post('/newVenta', (req,res) => {
 })
 
 //Get ventas
-router.get('/getVentas', (req,res) => {
+router.get('/getVentas', middlewareVerify, async (req,res) => {
 
+    
     let query = {}
+
+    if (res.locals.id) {
+      query.idUser = res.locals.id
+    }
 
     //Para saber cuantas ventas hay por metodo de pago
     if ( req.query.metodo ) {
@@ -89,15 +96,19 @@ router.get('/getVentas', (req,res) => {
 })
 
 //Get venta by ID
-router.get('/getVenta/:id', (req,res) => {
+router.get('/getVenta/:id',middlewareVerify, (req,res) => {
     ventasSchema.findById(req.params.id)
     .then((data) => res.json(data))
     .catch((error) => res.json({message: error}))
 })
 
 //Get ventas by today, week, month, year
-router.get('/getVentasByDate', (req, res) => {
+router.get('/getVentasByDate',middlewareVerify, (req, res) => {
     let query = {};
+
+    if (res.locals.id) {
+      query.idUser = res.locals.id
+    }
   
     if (req.query.fecha) {
       let fechaInicio, fechaFin;
@@ -132,7 +143,7 @@ router.get('/getVentasByDate', (req, res) => {
 });
 
 // Get top 5 productos mas vendidos
-router.get('/getTop5', async (req, res) => {
+router.get('/getTop5',middlewareVerify, async (req, res) => {
   try {
     const result = await ventasSchema.aggregate([
       {
@@ -158,7 +169,7 @@ router.get('/getTop5', async (req, res) => {
 });
 
 // Get top 5 metodos mas usados
-router.get('/getTop5Payments', async (req,res) => {
+router.get('/getTop5Payments',middlewareVerify, async (req,res) => {
 
   try {
     const result = await ventasSchema.aggregate([
@@ -185,7 +196,7 @@ router.get('/getTop5Payments', async (req,res) => {
 })
 
 //Delete venta 
-router.get('/deleteVenta/:id', async (req,res) => {
+router.get('/deleteVenta/:id',middlewareVerify, async (req,res) => {
   
     const id = req.params.id
 

@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 require('dotenv').config()
 const path = require('path')
 const fs = require('fs')
+const cors = require('cors');
 
 
 const app = express()
@@ -42,10 +43,14 @@ const swaggerSpec = {
 
 //middleware
 app.use(express.json())
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  next();
+
+app.use((req, res, next) => { 
+    res.setHeader('Access-Control-Allow-Origin', '*'); 
+    res.setHeader('Access-Control-Allow-Headers', 'content-type'); 
+    next(); 
 });
+
+app.use(cors());
 
 //Config error al pegarle
 app.options('/api/gmailVerify', (req, res) => {

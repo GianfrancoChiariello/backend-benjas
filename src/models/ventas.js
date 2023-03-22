@@ -113,6 +113,10 @@ const ventaSchema = mongoose.Schema(
         fecha: {
             type: Date,
             required: true,
+        },
+        idUser: {
+            type: String,
+            required: true
         }
     }
 )

@@ -72,6 +72,10 @@ const productsSchema = mongoose.Schema(
             required: true,
             enum: ['Kg','Gr']
         },
+        idUser: {
+            type: String,
+            required: true
+        }
     }
 
 )

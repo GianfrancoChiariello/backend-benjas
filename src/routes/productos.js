@@ -1,12 +1,15 @@
 const express = require('express')
 const productsSchema = require('../models/productos')
-
+const {middlewareVerify,verifyToken} = require('../functions/verifyToken')
 
 const router = express.Router()
 
 //Crear un producto
-router.post('/newProduct', (req,res) => {
+router.post('/newProduct',middlewareVerify, async (req,res) => {
+
     const producto = productsSchema(req?.body)
+    producto.idUser = res.locals.id
+
     
     producto.save()
     .then((data) => {
@@ -16,16 +19,18 @@ router.post('/newProduct', (req,res) => {
 })
 
 //Update product 
-router.put('/updateProduct/:id', (req, res) => {
+router.put('/updateProduct/:id',middlewareVerify, (req, res) => {
     const productId = req.params.id;
     const updatedProduct = req.body;
-    const update = {};
+
+    //TODO Pensar Mejor
+/*     const update = {};
 
     for (let field in updatedProduct) {
         update[`producto.${field}`] = updatedProduct[field];
-    }
+    } */
 
-    productsSchema.updateOne({_id: productId}, {$set: update})
+    productsSchema.updateOne({_id: productId}, {$set: updatedProduct})
         .then(() => {
             res.json({ message: `Product updated for product ${productId}` });
         })
@@ -35,8 +40,14 @@ router.put('/updateProduct/:id', (req, res) => {
 });
 
 //Get all products
-router.get('/getProducts', (req, res) => {
+router.get('/getProducts',middlewareVerify, async (req, res) => {
+            
     const query = {};
+
+
+    if (res.locals.id) {
+        query.idUser = res.locals.id
+    }
   
     if (req.query.marca) {
       query.marca = req.query.marca;
@@ -70,9 +81,11 @@ router.get('/getProducts', (req, res) => {
 
   
 // Endpoint para obtener todos los tipos únicos de los productos
-router.get('/getAllTypes', async (req, res) => {
+router.get('/getAllTypes',middlewareVerify, async (req, res) => {
+
+
     try {
-      const productos = await productsSchema.find();
+      const productos = await productsSchema.find({idUser: res.locals.id});
   
       const marcas = [...new Set(productos.map((producto) => producto.marca))];
       const animales = [...new Set(productos.map((producto) => producto.animal))];
@@ -95,7 +108,7 @@ router.get('/getAllTypes', async (req, res) => {
 
 
 //Get product for id
-router.get('/getProduct/:id', (req,res) => {
+router.get('/getProduct/:id',middlewareVerify, (req,res) => {
     const { id } = req.params
     
 
@@ -106,9 +119,13 @@ router.get('/getProduct/:id', (req,res) => {
 })
 
 //Get low stock
-router.get('/getLowStock', (req,res) => {
+router.get('/getLowStock',middlewareVerify, async (req,res) => {
     
     const query = {}
+
+    if (res.locals.id) {
+        query.idUser = res.locals.id
+    }
 
     if (req.query.marca) {
         query.marca = req.query.marca
@@ -143,7 +160,7 @@ router.get('/getLowStock', (req,res) => {
 })
 
 //Delete product
-router.delete('/deleteProduct/:id', (req,res) => {
+router.delete('/deleteProduct/:id',middlewareVerify, (req,res) => {
     const {id} = req.params
 
     productsSchema.findByIdAndDelete(id)
