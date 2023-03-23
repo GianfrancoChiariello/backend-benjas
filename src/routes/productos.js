@@ -43,12 +43,12 @@ router.put('/updateProduct/:id',middlewareVerify, (req, res) => {
 router.get('/getProducts',middlewareVerify, async (req, res) => {
             
     const query = {};
-
-
+  
     if (res.locals.id) {
         query.idUser = res.locals.id
-    }
-  
+      }
+    
+
     if (req.query.marca) {
       query.marca = req.query.marca;
     }
@@ -123,9 +123,7 @@ router.get('/getLowStock',middlewareVerify, async (req,res) => {
     
     const query = {}
 
-    if (res.locals.id) {
-        query.idUser = res.locals.id
-    }
+    res.locals.id ? query.idUser = res.locals.id : query.idUser = "undefined"
 
     if (req.query.marca) {
         query.marca = req.query.marca

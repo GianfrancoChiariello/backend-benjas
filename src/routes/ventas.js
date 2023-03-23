@@ -105,7 +105,7 @@ router.get('/getVenta/:id',middlewareVerify, (req,res) => {
 //Get ventas by today, week, month, year
 router.get('/getVentasByDate',middlewareVerify, (req, res) => {
     let query = {};
-
+        
     if (res.locals.id) {
       query.idUser = res.locals.id
     }
