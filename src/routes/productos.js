@@ -162,7 +162,7 @@ router.delete('/deleteProduct/:id',middlewareVerify, (req,res) => {
     const {id} = req.params
 
     productsSchema.findByIdAndDelete(id)
-    .then(() => res.json({message : `Se elimino el producto correctamente, id : ${id}`}))
+    .then(() => res.json({message : `Se elimino el producto correctamente`}))
     .catch((error) => res.json({message: error}))
 })
 

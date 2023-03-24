@@ -144,10 +144,14 @@ router.get('/getVentasByDate',middlewareVerify, (req, res) => {
 
 // Get top 5 productos mas vendidos
 router.get('/getTop5',middlewareVerify, async (req, res) => {
+  
   try {
     const result = await ventasSchema.aggregate([
       {
         $unwind: "$productos"
+      },
+      {
+        $match: {idUser: res.locals.id}
       },
       {
         $group: {
@@ -175,6 +179,9 @@ router.get('/getTop5Payments',middlewareVerify, async (req,res) => {
     const result = await ventasSchema.aggregate([
       {
         $unwind: "$productos"
+      },
+      {
+        $match: {idUser: res.locals.id}  
       },
       {
         $group: {
