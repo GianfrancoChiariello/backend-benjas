@@ -44,6 +44,17 @@ const swaggerSpec = {
 //middleware
 app.use(express.json())
 
+app.use((req, res, next) => { 
+    res.setHeader('Access-Control-Allow-Origin', '*'); 
+    res.setHeader('Access-Control-Allow-Headers', 'content-type'); 
+    next(); 
+});
+
+app.use(cors());
+
+//Aceptar peticiones de cualquier origen
+app.options('*', cors());
+
 
 //Config error al pegarle
 app.options('/api/gmailVerify', (req, res) => {
@@ -65,6 +76,8 @@ app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(
     swaggerJsDoc(swaggerSpec)
 ))
 
+
+
 //Routes
 app.get('/', (req,res) => {
     res.send('Welcome to my API')
@@ -82,9 +95,6 @@ mongoose.connect(api_key)
     })
 //
 
-app.use(cors({
-    origin: ['http://localhost:3000']
-  }));
 
 
 app.listen(port, () => {
