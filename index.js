@@ -44,13 +44,6 @@ const swaggerSpec = {
 //middleware
 app.use(express.json())
 
-app.use((req, res, next) => { 
-    res.setHeader('Access-Control-Allow-Origin', '*'); 
-    res.setHeader('Access-Control-Allow-Headers', 'content-type'); 
-    next(); 
-});
-
-app.use(cors());
 
 //Config error al pegarle
 app.options('/api/gmailVerify', (req, res) => {
@@ -71,8 +64,6 @@ fs.readdirSync('./src/routes').forEach((file) => {
 app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(
     swaggerJsDoc(swaggerSpec)
 ))
-
-
 
 //Routes
 app.get('/', (req,res) => {
