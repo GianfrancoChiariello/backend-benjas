@@ -91,6 +91,9 @@ mongoose.connect(api_key)
     })
 //
 
+app.use(cors({
+    origin: ['http://localhost:3000']
+  }));
 
 
 app.listen(port, () => {

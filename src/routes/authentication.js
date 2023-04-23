@@ -89,12 +89,22 @@ router.post('/signIn', async (req,res) => {
         if (search.length <= 0) return res.json("Credentials error")
 
 
+
+
         const token = jwt.sign({
                 email: credentials.email,
                 password: credentials.password,
                 id: search[0].id,
                 exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30
         }, 'secret')
+
+
+        //Header
+/*         return res.cookie('auth', credentials, {
+            domain: 'localhost',
+            path: '/',
+            expires: new Date(Date.now + 900000)
+        }) */
 
 
         return res.json({
